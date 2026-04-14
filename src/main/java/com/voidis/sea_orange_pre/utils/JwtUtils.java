@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class JwtUtils {
     private static final String SECRET_KEY = "secret_key_sea_orange_pre";
-    private static final long EXPIRE_TIME = 60 * 1000;
+    private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
 
     public static String generateToken(Long userId, String username) {
         Date now = new Date();
