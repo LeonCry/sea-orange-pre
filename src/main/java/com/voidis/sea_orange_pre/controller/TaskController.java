@@ -6,6 +6,7 @@ import com.voidis.sea_orange_pre.dto.CreateTaskParams;
 import com.voidis.sea_orange_pre.dto.TaskDeleteParams;
 import com.voidis.sea_orange_pre.entity.Task;
 import com.voidis.sea_orange_pre.service.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +19,21 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public Result<Task> addTask(@Valid @RequestBody CreateTaskParams taskParams) {
+    public Result<Task> addTask(@Valid @RequestBody CreateTaskParams taskParams, HttpServletRequest httpRequest) {
+        Long userId = (Long)httpRequest.getAttribute("userId");
         Task newTask = new Task();
         newTask.setTitle(taskParams.getTitle());
         newTask.setCompleted(taskParams.getCompleted());
-        return Result.OK(this.taskService.createTask(newTask));
+        return Result.OK(this.taskService.createTask(newTask,userId));
     }
     @GetMapping("/queryAll")
-    public Result<List<Task>> queryAll() {
-        return Result.OK(this.taskService.getAllTasks());
+    public Result<List<Task>> queryAll(HttpServletRequest httpRequest) {
+        Long userId = (Long)httpRequest.getAttribute("userId");
+        return Result.OK(this.taskService.getAllTasks(userId));
     }
     @PostMapping("/deleteById")
-    public void deleteById(@RequestBody TaskDeleteParams params) {
-        this.taskService.deleteTask(params.getId());
+    public void deleteById(@RequestBody TaskDeleteParams params,HttpServletRequest httpRequest) {
+        Long userId = (Long)httpRequest.getAttribute("userId");
+        this.taskService.deleteTask(params.getId(),userId);
     }
 }

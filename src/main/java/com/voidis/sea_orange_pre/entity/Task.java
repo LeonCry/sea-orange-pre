@@ -15,10 +15,14 @@ public class Task {
     private Long id;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private Boolean completed = false;
+
 
     @CreationTimestamp
     @Column(updatable = false)

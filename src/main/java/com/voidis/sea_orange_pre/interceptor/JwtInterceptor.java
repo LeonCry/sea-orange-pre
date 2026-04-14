@@ -1,5 +1,6 @@
 package com.voidis.sea_orange_pre.interceptor;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.voidis.sea_orange_pre.exception.CustomException;
 import com.voidis.sea_orange_pre.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,9 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
-            JwtUtils.verifyToken(token);
+            DecodedJWT decodedJWT = JwtUtils.verifyToken(token);
+            Long userId = decodedJWT.getClaim("id").asLong();
+            request.setAttribute("userId",userId);
             return true;
         } catch (Exception e) {
             throw new CustomException(401,"登录失效或过期，请重新登录");
